@@ -1,0 +1,49 @@
+body {
+    background-color: #0b1522;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.container {
+    width: 500px;
+    height: 500px;
+    position: relative;
+}
+
+p {
+    margin: 0;
+    font-size: 14px;
+    position: absolute;
+}
+
+.amor {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: red;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Ajustar la posición de las palabras para formar un corazón */
+.word1 { top: 10%; left: 50%; transform: translate(-50%, -50%); }
+.word2 { top: 20%; left: 45%; transform: translate(-50%, -50%); }
+.word3 { top: 20%; left: 55%; transform: translate(-50%, -50%); }
+.word4 { top: 30%; left: 40%; transform: translate(-50%, -50%); }
+.word5 { top: 30%; left: 60%; transform: translate(-50%, -50%); }
+.word6 { top: 40%; left: 35%; transform: translate(-50%, -50%); }
+.word7 { top: 40%; left: 65%; transform: translate(-50%, -50%); }
+.word8 { top: 50%; left: 30%; transform: translate(-50%, -50%); }
+.word9 { top: 50%; left: 70%; transform: translate(-50%, -50%); }
+.word10 { top: 60%; left: 35%; transform: translate(-50%, -50%); }
+.word11 { top: 60%; left: 65%; transform: translate(-50%, -50%); }
+.word12 { top: 70%; left: 40%; transform: translate(-50%, -50%); }
+.word13 { top: 70%; left: 60%; transform: translate(-50%, -50%); }
+.word14 { top: 80%; left: 45%; transform: translate(-50%, -50%); }
+.word15 { top: 80%; left: 55%; transform: translate(-50%, -50%); }
+.word16 { top: 90%; left: 50%; transform: translate(-50%, -50%); }

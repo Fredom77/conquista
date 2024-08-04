@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A La Princesa de Mi Corazón</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to bottom right, #fbc2eb, #a6c1ee);
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .welcome-screen img {
+            width: 200px; /* Ajusta el tamaño según sea necesario */
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .processing-message {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            z-index: 3;
+        }
+
+        .spinner {
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .heart-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            display: none;
+            z-index: 2;
+        }
+
+        .heart {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            transform: rotate(-45deg);
+            animation: openHeart 2s ease-in-out forwards;
+        }
+
+        .heart.left {
+            left: 50%;
+            transform-origin: right bottom;
+        }
+
+        .heart.right {
+            right: 50%;
+            transform-origin: left bottom;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -50px;
+            left: 0;
+        }
+
+        .heart::after {
+            top: 0;
+            left: 50px;
+        }
+
+        .message {
+            opacity: 0;
+            text-align: center;
+            font-size: 24px;
+            font-family: 'Dancing Script', cursive;
+            color: #333;
+            margin-top: 20px;
+            animation: showMessage 1s 2s forwards;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            max-width: 80%;
+            display: none;
+            z-index: 2;
+        }
+
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+            display: none;
+            z-index: 1;
+            gap: 10px;
+        }
+
+        .image-container img {
+            width: 100px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+
+        .image-container img:nth-child(1) {
+            animation-delay: 1s;
+        }
+
+        .image-container img:nth-child(2) {
+            animation-delay: 3s;
+        }
+
+        .image-container img:nth-child(3) {
+            animation-delay: 5s;
+        }
+
+        .image-container img:nth-child(4) {
+            animation-delay: 7s;
+        }
+
+        .image-container img:nth-child(5) {
+            animation-delay: 9s;
+        }
+
+        .image-container img:nth-child(6) {
+            animation-delay: 11s;
+        }
+
+        .image-container img:nth-child(7) {
+            animation-delay: 13s;
+        }
+
+        .love-message {
+            font-size: 48px;
+            color: red;
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            opacity: 1;
+        }
+
+        .special-message {
+            font-size: 20px;
+            color: #333;
+            margin-top: 20px;
+            display: none;
+            opacity: 0;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            line-height: 1.6;
+            letter-spacing: 1px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            max-width: 80%;
+        }
+
+        .special-message span {
+            display: inline-block;
+            opacity: 0;
+            animation: fadeInLetter 1s forwards;
+            margin-right: 1px;
+        }
+
+        .hearts-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .heart-arrow {
+            position: absolute;
+            bottom: 0;
+            width: 50px;
+            height: 50px;
+            background-color: red;
+            border-radius: 50% 50% 0 0;
+            transform: rotate(-45deg);
+            animation: floatHeart 15s infinite ease-in-out;
+        }
+
+        .heart-arrow::before,
+        .heart-arrow::after {
+            content: '';
+            position: absolute;
+            background-color: red;
+            border-radius: 50%;
+        }
+
+        .heart-arrow::before {
+            width: 50px;
+            height: 50px;
+            top: -25px;
+            left: 0;
+        }
+
+        .heart-arrow::after {
+            width: 50px;
+            height: 50px;
+            top: 0;
+            left: 25px;
+        }
+
+        .arrow {
+            position: absolute;
+            width: 2px;
+            height: 50px;
+            background-color: red;
+            transform: rotate(45deg);
+            top: 12px;
+            left: 12px;
+        }
+
+        .arrow::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 10px solid red;
+            top: -10px;
+            left: -4px;
+        }
+
+        .angels-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .angel {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-image: url('img/Angel.jpg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: floatAngel 10s infinite ease-in-out;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(100vh) rotate(-45deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(-45deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatAngel {
+            0% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInLetter {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        audio {
+            display: none;
+        }
+
+        @keyframes openHeart {
+            0% {
+                transform: rotate(-45deg);
+            }
+            50% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(45deg);
+            }
+        }
+
+        @keyframes showMessage {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-screen" onclick="startExperience()">
+        <img src="img/descarga.jpeg" alt="Imagen de bienvenida"> <!-- Imagen de bienvenida -->
+        Presiona aquí para explorar el universo de nuestro amor
+    </div>
+    <div class="processing-message">
+        <div class="spinner"></div>
+        <p>Tejiendo un sueño de amor solo para nosotros... Espera un momento, por favor....</p>
+    </div>
+    <div class="heart-container">
+        <div class="heart left"></div>
+        <div class="heart right"></div>
+    </div>
+    <div class="message">
+        Te amo mucho, mi reina. Estar contigo me hace muy feliz.<br>
+        Cada momento a tu lado es un tesoro que guardo en mi corazón.<br>
+        Eres la luz de mis días y el sueño de mis noches.<br>
+        Gracias por hacerme el hombre más feliz del mundo.<br>
+        Siempre estaré aquí para ti, en las buenas y en las malas.<br>
+        Eres mi todo, mi amor eterno.<br>
+        Te amo más de lo que las palabras pueden expresar.<br>
+        Mi corazón es tuyo, hoy y siempre.
+    </div>
+
+    <div class="image-container">
+        <img src="img/imagen 2.jpeg" alt="Imagen 2">
+        <img src="img/imagen 3.jpeg" alt="Imagen 3">
+        <img src="img/imagen 4.jpeg" alt="Imagen 4">
+        <img src="img/imagen 5.jpeg" alt="Imagen 5">
+        <img src="img/imagen 21.jpeg" alt="Imagen 21">
+        
+    
+    <div class="love-message">Te amo</div>
+    
+    <div class="special-message" id="special-message">
+       Nos conocimos en septiembre de 2023, y hoy, después de 11 meses, gracias a ti he descubierto el amor verdadero. Has sido mi refugio en los momentos difíciles y mi alegría en los buenos. Cada día a tu lado es un regalo. A pesar de los altibajos, nuestro amor sigue creciendo.
+
+Eres la razón de mi sonrisa, mi compañera de aventuras y mi amor eterno. Te amo con todo mi corazón. Estoy inmensamente agradecido por cada momento que compartimos y ansío seguir creando muchos más recuerdos contigo.
+    </div>
+
+    <div class="hearts-container">
+        <div class="heart-arrow" style="left: 10%; animation-delay: 0s;">
+            <div class="arrow"></div>
+        </div>
+        <div class="heart-arrow" style="left: 20%; animation-delay: 2s;">
+            <div class="arrow"></div>
+        </div>
+        <div class="heart-arrow" style="left: 30%; animation-delay: 4s;">
+            <div class="arrow"></div>
+        </div>
+        <div class="heart-arrow" style="left: 40%; animation-delay: 6s;">
+            <div class="arrow"></div>
+        </div>
+        <div class="heart-arrow" style="left: 50%; animation-delay: 8s;">
+            <div class="arrow"></div>
+        </div>
+        <div class="heart-arrow" style="left: 60%; animation-delay: 10s;">
+            <div class="arrow"></div>
+        </div>
+        <div class="heart-arrow" style="left: 70%; animation-delay: 12s;">
+            <div class="arrow"></div>
+        </div>
+        <div class="heart-arrow" style="left: 80%; animation-delay: 14s;">
+            <div class="arrow"></div>
+        </div>
+        <div class="heart-arrow" style="left: 90%; animation-delay: 16s;">
+            <div class="arrow"></div>
+        </div>
+    </div>
+
+    <div class="angels-container">
+        <div class="angel" style="left: 15%; animation-delay: 1s;"></div>
+        <div class="angel" style="left: 25%; animation-delay: 3s;"></div>
+        <div class="angel" style="left: 35%; animation-delay: 5s;"></div>
+        <div class="angel" style="left: 45%; animation-delay: 7s;"></div>
+        <div class="angel" style="left: 55%; animation-delay: 9s;"></div>
+        <div class="angel" style="left: 65%; animation-delay: 11s;"></div>
+        <div class="angel" style="left: 75%; animation-delay: 13s;"></div>
+        <div class="angel" style="left: 85%; animation-delay: 15s;"></div>
+    </div>
+    
+    <audio id="audio">
+        <source src="musica/audio.mp3" type="audio/mpeg">
+        Tu navegador no soporta la etiqueta de audio.
+    </audio>
+    <script>
+        function startExperience() {
+            var audio = document.getElementById('audio');
+            audio.play();
+
+            document.querySelector('.welcome-screen').style.display = 'none';
+            document.querySelector('.processing-message').style.display = 'block';
+
+            setTimeout(function() {
+                document.querySelector('.processing-message').style.display = 'none';
+                document.querySelector('.heart-container').style.display = 'block';
+                document.querySelector('.message').style.display = 'block';
+                document.querySelector('.message').style.opacity = '1';
+                document.querySelector('.image-container').style.display = 'flex';
+
+                document.querySelector('.hearts-container').style.display = 'flex';
+                document.querySelector('.angels-container').style.display = 'flex';
+
+                setTimeout(function() {
+                    var loveMessage = document.querySelector('.love-message');
+                    loveMessage.style.opacity = '0';
+                    loveMessage.style.zIndex = '0';
+                }, 10000);
+
+                setTimeout(function() {
+                    var specialMessageContainer = document.getElementById('special-message');
+                    specialMessageContainer.style.display = 'flex';
+                    specialMessageContainer.style.opacity = '1';
+                }, 11000);
+            }, 3000); // Duración del mensaje de procesamiento en milisegundos
+        }
+
+        document.querySelector('.welcome-screen').addEventListener('click', startExperience);
+    </script>
+</body>
+</html>
